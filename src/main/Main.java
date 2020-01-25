@@ -1,5 +1,5 @@
 
-package reaktor;
+package main;
 
 import java.util.*;
 
@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @author sonja
  */
-public class Reaktor {
+public class Main {
 
     public static void main(String[] args) {        
         FileReader f = new FileReader();

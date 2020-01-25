@@ -1,4 +1,4 @@
-package reaktor;
+package main;
 
 import java.util.*;
 

@@ -1,5 +1,5 @@
 
-package reaktor;
+package main;
 
 import java.nio.file.*;
 import java.util.*;
