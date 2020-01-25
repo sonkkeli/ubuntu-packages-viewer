@@ -43,7 +43,10 @@ public class FileReader {
                 String[] pieces = line.substring(splitPoint).split(",");
                 for (String p : pieces){
                     String[] nameAndVersion = p.split("\\(");
-                    po.addDependency(nameAndVersion[0].trim());
+                    String poNew = nameAndVersion[0].trim();
+                    if (!po.getDependencies().contains(poNew)){
+                        po.addDependency(poNew);
+                    }
                 }
                 last = 0;
                 
@@ -52,7 +55,9 @@ public class FileReader {
                 last = 1;
                 
             }  else if(line.isEmpty()){
-                packages.put(po.getPackageName(), po);
+                if(po.getPackageName() != null){
+                    packages.put(po.getPackageName(), po);
+                }                
                 po = new PackageObject();
                 last = 0;
                 
@@ -79,7 +84,9 @@ public class FileReader {
             if(!deps.isEmpty()){
                 for (String str : deps){
                     PackageObject original = packages.get(str);
-                    if(original != null) original.addReverseDependency(temp);
+                    if(original != null && !original.getReverseDependencies().contains(temp)){
+                        original.addReverseDependency(temp);
+                    }
                 }
             }            
         }

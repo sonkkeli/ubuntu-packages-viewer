@@ -6,7 +6,7 @@ import java.util.*;
  *
  * @author sonja
  */
-public class PackageObject {
+public class PackageObject implements Comparable<PackageObject>{
     private String packageName;
     private String description;
     private String version;
@@ -76,7 +76,7 @@ public class PackageObject {
     public void setReverseDependencies(List<String> reverseDependencies) {
         this.reverseDependencies = reverseDependencies;
     }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -129,5 +129,10 @@ public class PackageObject {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(PackageObject o) {
+        return this.getPackageName().compareTo(o.getPackageName());        
     }
 }
