@@ -79,7 +79,7 @@ public class PackageObject {
 
     @Override
     public String toString() {
-        return "PackageObject{" + "packageName=" + packageName + ", description=" + description + ", version=" + version + ", dependencies=" + dependencies + ", reverseDependencies=" + reverseDependencies + '}';
+        return "package: " + packageName + ", description: " + description + ", version: " + version + ", deps: " + dependencies + ", reverseDeps:" + reverseDependencies;
     }
 
     @Override

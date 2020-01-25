@@ -9,9 +9,6 @@ import java.util.*;
  */
 public class Reaktor {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {        
         FileReader f = new FileReader();
         List<String> lines = f.readFileFromUbuntu();
@@ -21,7 +18,11 @@ public class Reaktor {
             lines = f.readFakeFile();
         }
         
-        f.convertLinesToObjects(lines);
+        Map<String, PackageObject> packages = f.convertLinesToObjects(lines);
+        
+        for (String p : packages.keySet()) {
+            System.out.println(packages.get(p));
+        }
     }
     
 }
