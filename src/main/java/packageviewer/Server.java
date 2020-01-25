@@ -3,6 +3,7 @@ package packageviewer;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
+import java.nio.file.*;
 import java.util.*;
 
 /**
@@ -27,14 +28,26 @@ public class Server {
         while (true) {
             this.socket = server.accept();
             this.scanner = new Scanner(socket.getInputStream());
-            this.pw = new PrintWriter(socket.getOutputStream());
-            pw.println("HTTP/1.1 200 OK");
-            pw.println("Content-Type: application/json");
-            pw.println("");
-            Gson gson = new Gson();
-            String json = gson.toJson(packages);
-            pw.println(json);
-            pw.flush();
+            
+            if(scanner.nextLine().contains("/api/packages")){
+                this.pw = new PrintWriter(socket.getOutputStream());
+                pw.println("HTTP/1.1 200 OK");
+                pw.println("Content-Type: application/json");
+                pw.println("");
+                Gson gson = new Gson();
+                String json = gson.toJson(packages);
+                pw.println(json);
+                pw.flush();
+                
+            } else {
+                this.pw = new PrintWriter(socket.getOutputStream());
+                pw.println("HTTP/1.1 200 OK");
+                pw.println("");
+                Files.lines(Paths.get("index.html"))
+                    .forEach(line -> pw.println(line));
+                pw.flush();
+            }
+            
             scanner.close();
             pw.close();
             socket.close();
