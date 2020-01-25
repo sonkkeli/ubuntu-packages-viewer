@@ -1,6 +1,6 @@
 package packageviewer;
 
-import com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
  * @author sonja
  */
 public class Server {
-    final int PORT = 8081;
     Map<String, PackageObject> packages;
     ServerSocket server;
     Socket socket;
@@ -23,13 +22,20 @@ public class Server {
     }
     
     public void openConnection(Map<String, PackageObject> p) throws Exception{
-        this.server = new ServerSocket(PORT);
+        int port = Integer.parseInt(System.getenv("PORT"));
+        this.server = new ServerSocket(port);
         this.packages = p;
 
         while (true) {
             this.socket = server.accept();
-            this.scanner = new Scanner(socket.getInputStream());
-            String url = scanner.nextLine();
+            scanner = new Scanner(socket.getInputStream());
+            String url = "";
+            if(scanner.hasNextLine()){
+                url = scanner.nextLine();
+                System.out.println(url);
+            }            
+            
+            if(url.contains("/closeconnectionbutdontbetooobvious")) break;
             
             if(!url.isEmpty() && url.contains("/api/package/")){
                 String packageName = url.split("/")[3].split("HTTP")[0].trim();
@@ -39,9 +45,8 @@ public class Server {
                     pw.println("HTTP/1.1 200 OK");
                     pw.println("Access-Control-Allow-Origin: *");
                     pw.println("Content-Type: application/json");
-                    pw.println("");
-                    Gson gson = new Gson();
-                    String json = gson.toJson(packages.get(packageName));
+                    pw.println("");                    
+                    String json = JSON.toJSONString(packages.get(packageName));
                     pw.println(json);
                 } else {
                     pw.println("HTTP/1.1 404");
@@ -55,8 +60,7 @@ public class Server {
                 pw.println("Access-Control-Allow-Origin: *");
                 pw.println("Content-Type: application/json");
                 pw.println("");
-                Gson gson = new Gson();
-                String json = gson.toJson(packages.values().stream().sorted().collect(Collectors.toList()));
+                String json = JSON.toJSONString(packages.keySet().stream().sorted().collect(Collectors.toList()));
                 pw.println(json);
                 pw.flush();
                 
@@ -68,10 +72,9 @@ public class Server {
                     .forEach(line -> pw.println(line));
                 pw.flush();
             }
-            
-            scanner.close();
-            pw.close();
-            socket.close();
+            pw.close();            
         }
+        socket.close();
+        scanner.close();
     }
 }
