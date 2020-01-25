@@ -1,6 +1,6 @@
+package packageviewer;
 
-package main;
-
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
@@ -110,12 +110,10 @@ public class FileReader {
     public List<String> readFakeFile(){
         
         List<String> lines = new ArrayList<>();        
-        String url = this.getClass().getResource("/data/status.real").getPath();        
         try {
-            Files.lines(Paths.get(url.substring(3)))                
-                .forEach(rivi -> lines.add(rivi));
+            Files.lines(Paths.get("status.real")).forEach(rivi -> lines.add(rivi));
             System.out.println("read fake file, " + lines.size() + " lines");
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Virhe: " + e.getMessage());
         }        
         return lines;

@@ -1,4 +1,4 @@
-package main;
+package packageviewer;
 
 import java.util.*;
 
@@ -67,7 +67,7 @@ public class PackageObject {
     
     public void addReverseDependency(String po){
         this.reverseDependencies.add(po);
-    }    
+    }
 
     public List<String> getReverseDependencies() {
         return reverseDependencies;
@@ -79,7 +79,15 @@ public class PackageObject {
 
     @Override
     public String toString() {
-        return "package: " + packageName + ", description: " + description + ", version: " + version + ", deps: " + dependencies + ", reverseDeps:" + reverseDependencies;
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("package: ").append(packageName);
+        sb.append("description: ").append(description);
+        sb.append("version: ").append(version);
+        sb.append("dependencies: ").append(dependencies);
+        sb.append("reverseDependencies: ").append(reverseDependencies);
+        sb.append("}");
+        return sb.toString();
     }
 
     @Override
@@ -122,6 +130,4 @@ public class PackageObject {
         }
         return true;
     }
-    
-    
 }
