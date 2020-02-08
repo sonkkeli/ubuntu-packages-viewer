@@ -24,8 +24,10 @@ public class Server {
     }
     
     public void openConnection (Map<String, PackageObject> p) throws Exception {
-        int port = Integer.parseInt(System.getenv("PORT")); // running in heroku
-//        int port = 8081; // running locally
+        int port = System.getenv("PORT") != null 
+                ? Integer.parseInt(System.getenv("PORT")) // running in heroku
+                : 8081; // running locally
+        
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         this.packages = p;
         
