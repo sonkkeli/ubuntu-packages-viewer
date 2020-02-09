@@ -53,11 +53,11 @@ public class Server {
             String param = getQueryParam(test.toString());
             
             String respText = JSON.toJSONString(packages.getOrDefault(param, null));
-            if(!respText.equals("null")){
-                Headers h = exchange.getResponseHeaders();
-                this.addHeaders(h);
-                exchange.sendResponseHeaders(200, respText.getBytes().length);
-                
+            Headers h = exchange.getResponseHeaders();
+            this.addHeaders(h);
+            
+            if(!respText.equals("null")){                
+                exchange.sendResponseHeaders(200, respText.getBytes().length);                
                 OutputStream output = exchange.getResponseBody();
                 output.write(respText.getBytes());
                 output.flush();
@@ -82,7 +82,6 @@ public class Server {
     
     private String getQueryParam(String url){
         String[] parts = url.split("/");
-        System.out.println(parts[3]);
         return parts[3];
     }
 }
