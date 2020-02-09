@@ -19,14 +19,17 @@ public class Server {
     Socket socket;
     PrintWriter pw;
     Scanner scanner;
+    private boolean isRunningInHeroku = false;
 
     public Server() {        
     }
     
     public void openConnection (Map<String, PackageObject> p) throws Exception {
-        int port = System.getenv("PORT") != null 
-                ? Integer.parseInt(System.getenv("PORT")) // running in heroku
-                : 8081; // running locally
+        int port = 8081; // running locally
+        if (System.getenv("PORT") != null){
+            port = Integer.parseInt(System.getenv("PORT")); // running in heroku
+            isRunningInHeroku = true;
+        }        
         
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         this.packages = p;
@@ -35,8 +38,7 @@ public class Server {
             String respText = JSON.toJSONString(packages.keySet().stream().sorted().collect(Collectors.toList()));            
           
             Headers h = exchange.getResponseHeaders();
-            h.add("Access-Control-Allow-Origin", "*");
-            h.add("Content-Type", "application/json");
+            this.addHeaders(h);
             
             exchange.sendResponseHeaders(200, respText.getBytes().length);
             OutputStream output = exchange.getResponseBody();
@@ -53,8 +55,7 @@ public class Server {
             String respText = JSON.toJSONString(packages.getOrDefault(param, null));
             if(!respText.equals("null")){
                 Headers h = exchange.getResponseHeaders();
-                h.add("Access-Control-Allow-Origin", "*");
-                h.add("Content-Type", "application/json");            
+                this.addHeaders(h);
                 exchange.sendResponseHeaders(200, respText.getBytes().length);
                 
                 OutputStream output = exchange.getResponseBody();
@@ -68,6 +69,15 @@ public class Server {
         
         server.setExecutor(null); // creates a default executor
         server.start();
+    }
+    
+    private void addHeaders(Headers h){
+        if (isRunningInHeroku){
+            h.add("Access-Control-Allow-Origin", "https://package-frontend.herokuapp.com");
+        } else {
+            h.add("Access-Control-Allow-Origin", "http://localhost:3000");
+        }                
+        h.add("Content-Type", "application/json");   
     }
     
     private String getQueryParam(String url){
