@@ -35,3 +35,6 @@ This will open your browser with **localhost:3000** where you can see the app ru
 To build the image, run `docker build -t {IMAGE_NAME}`
 To run the docker image, run `docker run -p 8081:8081 {IMAGE_NAME}`
 Then go to [http://localhost:8081/api/packages] to view all packages.
+
+## DevOps pipeline
+The backend project is connected with CircleCI devops tool so that each `git push` automatically runs the deployment process in CircleCI and on success pushes the changes to Heroku.
